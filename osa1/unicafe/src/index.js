@@ -12,7 +12,7 @@ const TableColHead = props =>
     <th style={ props.style }>{ props.text }</th>;
 
 const TableRow = props =>
-    <tr>{ props.content }</tr>;
+    <tr>{props.children}</tr>;
 
 const TableData = props =>
     <td style={props.style}>{ props.text }</td>;
@@ -20,15 +20,10 @@ const TableData = props =>
 const Statistic = props =>
     Object.entries(props.feedback)
         .map(([k, v]) => (
-            <TableRow 
-                key={k} 
-                content={
-                    <>
-                    <TableData text={v.text} style={{textAlign: 'right'}} />
-                    <TableData text={v.value} style={{textAlign: 'left'}} />
-                    </>
-                }
-            />
+            <TableRow key={k}>
+                <TableData text={v.text} style={{textAlign: 'right'}} />
+                <TableData text={v.value} style={{textAlign: 'left'}} />
+            </TableRow>
         )
     );
 
@@ -39,14 +34,10 @@ const Statistics = props =>
     :
     <table>
         <thead>
-            <TableRow 
-                content={
-                    <>
-                    <TableColHead text="Item" style={{textAlign: 'right'}}/>
-                    <TableColHead text="Value" style={{textAlign: 'left'}}/>
-                    </>
-                }
-            />
+            <TableRow>
+                <TableColHead text="Item" style={{textAlign: 'right'}}/>
+                <TableColHead text="Value" style={{textAlign: 'left'}}/>
+            </TableRow>
         </thead>
         <tbody>
             <Statistic feedback={props.feedback}/>
@@ -85,7 +76,6 @@ const feedbackStats = {
             text: 'Positive'
         }
     }
-
 }
 
 const App = () => {
@@ -107,7 +97,7 @@ const App = () => {
             </div>
             <div>
                 <h2>Statistics so far</h2>
-                <Statistics feedback={ feedbackState }/>
+                <Statistics feedback={feedbackState}/>
             </div>
         </div>
     )
