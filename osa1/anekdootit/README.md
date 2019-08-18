@@ -1,3 +1,13 @@
+# Anekdootit - Full Stack Open 2019
+
+- Shows a random anecdote from a list.
+- Ability to vote
+- Frontend only
+
+![Screenshot](FullStackOpen2019-osa1-Anekdootit.png)
+
+---
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
