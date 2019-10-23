@@ -1,0 +1,36 @@
+li {
+    border-radius: 0.5em;
+    box-shadow: 2px 2px 5px #cfd7c7;
+    padding: 1em;
+    margin: 0.5em;
+    background-color: #cfd7c7;
+    list-style-type: none;
+    width: 50vw;
+    position: relative;
+}
+
+.name {
+    font-weight: bold;
+    font-size: 1.3rem;
+    padding: 0.3em;
+    height: 1.2em;
+}
+
+.number {
+    font-family: monospace;
+    font-size: 1.3rem;
+    padding: 0.3em;
+    height: 1.2em;
+}
+
+.number a {
+    color: #40798c;
+    font-family: monospace;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.number a:hover {
+    cursor: pointer;
+    text-decoration-style: dashed;
+}
