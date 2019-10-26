@@ -1,3 +1,12 @@
+# Puhelinluettelo, for FullStackOpen 2019
+
+Osa2 "Puhelinluettelo"
+
+![Added name and number](img/added_a_phone_number.png)
+![Search for name](img/search_number.png)
+
+---
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

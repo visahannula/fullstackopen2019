@@ -1,0 +1,14 @@
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  width: 50vw;
+}
+
+.App-logo {
+  height: 40vmin;
+}
+
+.App-link {
+  color: #09d3ac;
+}

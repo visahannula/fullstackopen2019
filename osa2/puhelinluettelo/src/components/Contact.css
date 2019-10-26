@@ -4,23 +4,19 @@ li {
     padding: 1em;
     margin: 0.5em;
     background-color: #cfd7c7;
+    font-size: 1.3rem;
     list-style-type: none;
     width: 50vw;
     position: relative;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .name {
     font-weight: bold;
-    font-size: 1.3rem;
-    padding: 0.3em;
-    height: 1.2em;
-}
-
-.number {
-    font-family: monospace;
-    font-size: 1.3rem;
-    padding: 0.3em;
-    height: 1.2em;
+    flex-grow: 1;
 }
 
 .number a {
@@ -28,6 +24,7 @@ li {
     font-family: monospace;
     font-weight: bold;
     text-decoration: none;
+    flex-grow: 1;
 }
 
 .number a:hover {

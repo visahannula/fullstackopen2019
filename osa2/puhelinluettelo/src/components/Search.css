@@ -1,0 +1,15 @@
+#searchInputContainer {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 0.5em;
+}
+
+h2 {
+    margin: 0px;
+}
+
+input {
+    margin: 0.5em;
+}

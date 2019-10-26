@@ -1,0 +1,26 @@
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+#nameField {
+    display: flex;
+    margin: 0.5em;
+    flex: flex-grow;
+    flex-direction: column;
+    justify-content: last baseline;
+}
+
+#numberField {
+    display: flex;
+    margin: 0.5em;
+    flex: flex-grow;
+    flex-direction: column;
+}
+
+#submitButton {
+    display: flex;
+    justify-content: flex-end;
+}
