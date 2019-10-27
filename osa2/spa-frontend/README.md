@@ -1,3 +1,9 @@
+# Fullstackopen 2019, single page app sandboxing
+
+Note you can use "npm run server" or "yarn server" to start json server ("json-server --port 3001 --host 0.0.0.0 db.json").
+
+---
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts

@@ -1,12 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+
 import Note from './Note';
+
+const HOSTNAME = process.env.REACT_APP_API_HOSTNAME || 'localhost';
+const PORT = process.env.REACT_APP_API_PORT || 3001;
 
 const App = props => {
     const defaultNoteInputValue = "Default note";
     const [showAll, setShowAll] = useState(true);
-    const [notes, setNotes] = useState(props.notes);
+    const [notes, setNotes] = useState([]);
     const [newNote, setNewNote] = useState(defaultNoteInputValue);
     const [inputStarted, setInputStarted] = useState(false);
+
+    const getFromServerHook = () => {
+        console.log("Effect start");
+        axios
+            .get(`http://${HOSTNAME}:${PORT}/notes`)
+            .then(
+                response => 
+                    setNotes(response.data)
+                , response => 
+                    console.log('Request failed.', response)
+            );
+    };
+
+    useEffect(getFromServerHook, []);
+
+    console.log('render', notes.length, 'notes');
 
     const handlerNoteOnSubmit = event => {
         event.preventDefault();
@@ -43,7 +64,7 @@ const App = props => {
     }
 
     const handlerNoteInputOnBlur = event => {
-        if (newNote ===  "" || newNote === defaultNoteInputValue) {
+        if (newNote === "" || newNote === defaultNoteInputValue) {
             setNewNote(defaultNoteInputValue);
             setInputStarted(false);
         }
@@ -73,7 +94,7 @@ const App = props => {
                     onFocus={handlerNoteInputOnFocus}
                     onBlur={handlerNoteInputOnBlur}
                     onChange={handlerNewNote}
-                    name="noteSubmitTextField" 
+                    name="noteSubmitTextField"
                     value={newNote}
                 />
                 <button type="submit">Save</button>
