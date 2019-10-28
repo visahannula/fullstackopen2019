@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios';
 
 import PhonebookAddForm from './PhonebookForm';
 import ContactList from './ContactList';
@@ -6,15 +7,24 @@ import Search from './Search';
 
 import './App.css';
 
-const App = () => {
-    const [persons, setPersons] = useState([
-        { name: 'Arto Hellas', number: '+358 040 123' },
-        { name: 'Michael Knight', number: '+555 555' },
-        { name: 'Arnold Stallone', number: '+555 2310' }
-    ]);
+const API_HOST = process.env.REACT_APP_API_HOSTNAME || "localhost";
+const API_PORT = process.env.REACT_APP_API_PORT || 3001;
 
-    const [filteredPersons, setFilteredPersons] = useState(persons);
+const App = () => {
+    const [persons, setPersons] = useState([]);
+    const [filteredPersons, setFilteredPersons] = useState([]);
     const [filter, setFilter] = useState('');
+
+    useEffect(() => {
+            axios
+                .get(`http://${API_HOST}:${API_PORT}/persons`)
+                .then(response => setPersons(response.data))
+                .catch(error => {
+                    console.error("Error getting data. ", error);
+            });
+        },
+        []
+    );
 
     return (
         <div>
@@ -25,7 +35,6 @@ const App = () => {
                 setFilter={setFilter}
                 setFilteredPersons={setFilteredPersons}
             />
-
             <PhonebookAddForm
                 persons={persons}
                 setPersons={setPersons}
