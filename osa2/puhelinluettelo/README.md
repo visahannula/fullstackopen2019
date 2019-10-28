@@ -2,6 +2,15 @@
 
 Osa2 "Puhelinluettelo"
 
+There are two "script" commands available:
+- "server": ". ${PWD}/.env.local; json-server --w db.json --ng -H ${REACT_APP_API_HOSTNAME:=localhost} -p ${REACT_APP_API_PORT:=3001}"
+-- Start JSON server on .env.local configured host and port
+- "start-env": ". ${PWD}/.env.local; react-scripts start"
+-- Start app with the env configured from .env.local
+
+Note: Scripts only tested on Linux/Debian/Bash.
+
+
 ![Added name and number](img/added_a_phone_number.png)
 ![Search for name](img/search_number.png)
 
