@@ -16,13 +16,11 @@ const App = () => {
     const [filter, setFilter] = useState('');
 
     useEffect(() => {
-            axios
-                .get(`http://${API_HOST}:${API_PORT}/persons`)
-                .then(response => setPersons(response.data))
-                .catch(error => {
-                    console.error("Error getting data. ", error);
-            });
-        },
+        axios
+            .get(`http://${API_HOST}:${API_PORT}/persons`)
+            .then(response => setPersons(response.data))
+            .catch(error => console.error("Error getting data. ", error));
+    },
         []
     );
 
