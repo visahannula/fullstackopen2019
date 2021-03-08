@@ -1,0 +1,14 @@
+li {
+    border: 1px solid gray;
+    display: block;
+}
+
+.countryCode {
+    position: absolute;
+    display: block;
+    background-color: darkblue;
+    color: lightgray;
+    padding: 0.2rem;
+    margin: 0.5rem;
+    border-radius: 0.3rem;
+}
