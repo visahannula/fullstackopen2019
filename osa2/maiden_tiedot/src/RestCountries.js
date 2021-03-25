@@ -1,71 +1,102 @@
-/* Data fetching class */
 import axios from 'axios';
 
-
+/**
+ * Data fetching class for restcountries.eu
+ * */
 class RestCountries {
-    constructor() {
-        this.baseURL = 'https://restcountries.eu/rest/v2';
-        this.pathName = '/name/';
-        this.pathAll = '/all';
-        this._filters = [];
+    baseURL = 'https://restcountries.eu/rest/v2';
+    paths = {
+        name: '/name/',
+        alpha3: '/alpha/',
+        all: '/all'
     }
+    axiosConfig = {
+        responseType: 'json',
+        headers: { "Accept": "application/json" }
+    }
+    _filters = []; // for example ["name", "nativeName", "alpha3Code"]
 
     get filters() {
         return this._filters;
     }
 
-    set filters(value) {
-        console.log("Setting filter", value);
-        if (Array.isArray(value)) {
-            this._filters = value;
+    set filters(fields) {
+        console.log("Setting filters: ", fields);
+        if (Array.isArray(fields)) {
+            this._filters = fields.map(field => encodeURIComponent(field));
         } else {
-            this._filters = [value];
+            this._filters = [encodeURIComponent(fields)];
         }
+        return this.filters;
+    }
+
+    createFilterFieldsURIParams() {
+        return this.filters.length > 0 ? "fields=" + this.filters.join(";") : "";
+    }
+
+    createEndpointURL(path, param = "", filters) {
+        if (!(path in this.paths)) {
+            throw new Error('Endpoint not found!');
+        }
+
+        let URL = this.baseURL + this.paths[path] + encodeURIComponent(param);
+        if (this.filters.length > 0) URL += "?" + this.createFilterFieldsURIParams();
+        
+        return URL;
+    }
+
+    getEndpoint(URL, callback) {
+        console.log("Going to GET: " + URL);
+        return axios
+            .get(URL)
+            .then(response => this._successHandler({ response, callback }))
+            .catch(error => this._errorHandler({ error, callback, endpoint: URL }));
+    }
+
+    _errorHandler({ error, endpoint, callback }) {
+        console.log(`Error getting data from endpoint "${endpoint}": `, error);
+        return callback(false);
+    }
+
+    _successHandler({ response, callback }) {
+        console.log("Got response: ", response.data);
+        return callback(response.data);
+    }
+    /**
+    * Get a single country using provided name.
+    * Calls Callback with response.
+    * @param {string} countryName Countryname to search for
+    * @param {function} callback Callback
+    */
+    name(countryName, callback) {
+        if (!countryName || !callback) throw new Error("Error. Cannot get data. No countryName or callback given.");
+
+        const endpoint = this.createEndpointURL('name', countryName);
+        return this.getEndpoint(endpoint, callback);
     }
 
     /**
-     * Get a single country using provided name.
-     * Calls Callback with response.
-     * @param {String} name Countryname to search for
-     * @param {Function} cb Callback
+     * Get countries
+     * @param {string} code 3 character Country Code
+     * @param {function} callback Function to call with response
+     * @returns 
      */
-    name(name, cb) {
-        if (!name || !cb) return false;
+    alpha3code(code, callback) {
+        if (!code || !callback) throw new Error("Error. Cannot get data. No countryCode or callback given.");
 
-        console.log("Getting: " + this.baseURL + this.pathName + encodeURIComponent(name));
-
-        axios
-            .get(this.baseURL + this.pathName + encodeURIComponent(name))
-            .then(response => {
-                console.log("Got response: ", response);
-                return cb(response.data);
-            })
-            .catch(error => {
-                console.log("Error getting data: ", error);
-                return cb(false);
-            });
+        const endpoint = this.createEndpointURL('alpha3', code);
+        return this.getEndpoint(endpoint, callback);
     }
 
     /**
      * Get all countries and return a callback.
-     * @param {Function} cb Callback function
+     * @param {function} cb Callback function
      */
-    all(cb) {
-        const URI = "".concat(`${this.baseURL}${this.pathAll}`, 
-            this.filters.length > 0 ? "?fields=" + this.filters.join(";") : "");
+    all(callback) {
+        if (!callback) throw new Error("Error. Will not get data. No callback given.");
 
-        console.log("Getting: " + URI);
-
-        axios
-            .get(URI)
-            .then(res => {
-                console.log("Got response: ", res);
-                return cb(res.data);
-            })
-            .catch(error => {
-                console.log("Error getting data: ", error);
-                return cb(false);
-            });
+        const endpoint = this.createEndpointURL('all');
+        return this.getEndpoint(endpoint, callback);
     }
 }
 
