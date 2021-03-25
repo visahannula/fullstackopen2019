@@ -1,26 +1,36 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import './SearchInput.css';
 
 
-const SearchInput = ({ setValueCallback }) => {
-    const [inputValue, setInputValue] = useState("");
-    
-    useEffect(() => {
-        console.log("Effect hook");
-        setValueCallback(
-            {
-                inputValue: inputValue,
-                isEmpty: !!!inputValue
-            }
-        );
-    },
-        [setValueCallback, inputValue]
-    );
+export const SearchInput = ({ setValueCallback, isInputEnabled }) => {
+    const [visibleInputValue, setVisibleInputValue] = useState("");
+    const [internalInputValue, setInternalInputValue] = useState("");
+
+    const checkSetInputValue = ({ target: { value } }) => {
+        const valueTrim = value.trim();
+
+        if (valueTrim !== "") console.log("Input value is empty. Stored: ", internalInputValue);
+
+        if (value !== internalInputValue) {
+            console.log("Input value changed. ", value);
+            setInternalInputValue(value);
+            setVisibleInputValue(value);
+            setValueCallback(
+                {
+                    inputValue: valueTrim,
+                    isEmpty: !!!valueTrim
+                }
+            );
+        }
+    }
 
     return (
         <input
-            onChange={ ({target: {value}}) => setInputValue(value) }
-            value={ inputValue }
-            placeholder="Enter country name"
+            disabled={!isInputEnabled}
+            onChange={checkSetInputValue}
+            value={visibleInputValue}
+            placeholder={isInputEnabled ? "Enter country name" : "Country list not available."}
+            type="search"
         />
     )
 }
