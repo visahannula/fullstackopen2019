@@ -20,3 +20,11 @@
 .App-link {
   color: #09d3ac;
 }
+
+.countryListContainer {
+  margin: 0 auto;
+}
+
+#footer {
+  margin: 1em auto;
+}
