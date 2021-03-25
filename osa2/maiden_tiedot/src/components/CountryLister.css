@@ -1,14 +1,66 @@
-li {
+.card {
+    position: relative;
     border: 1px solid gray;
-    display: block;
+    border-radius: 5px;
+    margin: 1rem 1rem;
+    box-shadow: 0 0.2rem rgba(0,0,0,0.1);
+}
+
+.card:hover {
+    border: 1px solid darkgray;
+    box-shadow: 0 0.2rem rgba(0,0,0,0.2);
+}
+
+.cardContainer {
+	display: flex;
+    justify-content: space-between;
+    flex-flow: row wrap;
+    align-items: stretch;
+   	padding: 0;
+    margin: 0;
 }
 
 .countryCode {
-    position: absolute;
-    display: block;
+	flex: 2 1 10%;
     background-color: darkblue;
     color: lightgray;
-    padding: 0.2rem;
-    margin: 0.5rem;
-    border-radius: 0.3rem;
+    border-radius: 5px 0 0 5px;
+    margin: 5px;
+    width: 70%;
+    padding: 5px;
+    min-width: 10px;
+  	min-height: 3rem;
+    text-align: center;
+    font-family: Arial;
+    font-weight: 600;
+    line-height: 3rem;
 }
+
+.cardText {
+	flex: 4 2;
+    padding: 1rem 1rem;
+    font-family: Arial;
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.countryInformation {
+    display: flex;
+    flex-flow: column wrap;
+    text-align: left;
+}
+
+
+.flagAndMap {
+    width: 310px;
+    align-items: baseline;
+}
+
+.flag {
+    flex: 2 0 100px;
+    /*height: fit-content;*/
+    width: 300px;
+    box-shadow: 4px 4px 6px rgb(0 0 0 / 50%);
+    margin: 5px;
+}
+
