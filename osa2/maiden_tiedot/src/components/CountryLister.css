@@ -14,14 +14,18 @@
 .cardContainer {
 	display: flex;
     justify-content: space-between;
-    flex-flow: row wrap;
+    flex-flow: column;
     align-items: stretch;
    	padding: 0;
     margin: 0;
 }
 
+.cardHeader {
+    display: flex;
+}
+
 .countryCode {
-	flex: 2 1 10%;
+	flex: 0 0 15%;
     background-color: darkblue;
     color: lightgray;
     border-radius: 5px 0 0 5px;
@@ -37,7 +41,7 @@
 }
 
 .cardText {
-	flex: 4 2;
+	flex: 5 2 auto;
     padding: 1rem 1rem;
     font-family: Arial;
     font-weight: 600;
@@ -46,10 +50,14 @@
 
 .countryInformation {
     display: flex;
-    flex-flow: column wrap;
+    flex-flow: row wrap;
     text-align: left;
+    justify-content: space-around;
 }
 
+.h3 {
+    text-decoration: underline 2pt lightgray;
+}
 
 .flagAndMap {
     width: 310px;
@@ -58,9 +66,15 @@
 
 .flag {
     flex: 2 0 100px;
-    /*height: fit-content;*/
     width: 300px;
     box-shadow: 4px 4px 6px rgb(0 0 0 / 50%);
+    margin: 5px;
+}
+
+.clickToFullList {
+    cursor: pointer;
+    font-weight: 600;
+    line-height: 3rem;
     margin: 5px;
 }
 

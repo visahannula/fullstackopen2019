@@ -21,11 +21,11 @@ export const ExpandedSingleCountry = ({ country: { name, alpha3Code, nativeName 
 
     console.log("ExpandedSingleCoutry, data given: ", name, alpha3Code, nativeName, listId);
 
-    useEffect(() => {   
-        function getGetCountryData () {
+    useEffect(() => {
+        function getGetCountryData() {
             const restCountries = new RestCountries();
             restCountries.alpha3code(alpha3Code, (response) => {
-                console.log(response)
+                console.info("Data for single country: ", response);
                 if (response) {
                     setIsFullData(true);
                     setCountryData(response);
@@ -49,32 +49,37 @@ export const ExpandedSingleCountry = ({ country: { name, alpha3Code, nativeName 
         countryElement = (
             <div className="card" id={"country_" + listId}>
                 <div className="cardContainer">
-                    <div className="countryCode">{alpha3Code}</div>
-                    <div className="cardText">{name}, {nativeName}</div>
-                </div>
-                <div className="countryInformation">
-                    <h2>Country information</h2>
-                    <ul>
-                        <li>World region: {region}</li>
-                        <li>Capital: {capital}</li>
-                        <li>Population: {new Intl.NumberFormat().format(population)}</li>
-                        <li>Top level domain: {topLevelDomain}</li>
-                    </ul>
-
-                    <p><b>Spoken languages:</b> {languages.map(lang => lang['name']).join(", ")}</p>
-                    <div className="flagAndMap">
-                        <img className="flag" src={countryData['flag']} alt="flag" />
-                        <MapIframe
-                            latitude={countryData['latlng'][0]}
-                            longitude={countryData['latlng'][1]}
-                            className="mapIframe">
-                        </MapIframe>
+                    <div className="cardHeader">
+                        <div className="countryCode">{alpha3Code}</div>
+                        <div className="cardText">{name}, {nativeName}</div>
                     </div>
-                    <div>
-                        Current weather in {capital}:
-                        <WeatherMapContainer city={capital}></WeatherMapContainer>
-                    </div>
+                    <div className="countryInformation">
+                        <div className="leftSide">
+                            <h3>Country information</h3>
+                            <ul>
+                                <li>World region: {region}</li>
+                                <li>Capital: {capital}</li>
+                                <li>Population: {new Intl.NumberFormat().format(population)}</li>
+                                <li>Top level domain: {topLevelDomain}</li>
+                                <li>Spoken languages: {languages.map(lang => lang['name']).join(", ")}</li>
+                            </ul>
+                            <div className="weatherContainer">
+                                <h4>Current weather in <b>{capital}</b></h4>
+                                <WeatherMapContainer city={capital}></WeatherMapContainer>
+                            </div>
+                        </div>
 
+                        <div className="rightSide">
+                            <div className="flagAndMap">
+                                <img className="flag" src={countryData['flag']} alt="flag" />
+                                <MapIframe
+                                    latitude={countryData['latlng'][0]}
+                                    longitude={countryData['latlng'][1]}
+                                    className="mapIframe">
+                                </MapIframe>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
@@ -83,9 +88,12 @@ export const ExpandedSingleCountry = ({ country: { name, alpha3Code, nativeName 
             <div className="card" id={"country_" + listId
             }>
                 <div className="cardContainer">
-                    <div className="countryCode">{alpha3Code}</div>
-                    <div className="cardText">{name}, {nativeName}</div>
+                    <div className="cardHeader">
+                        <div className="countryCode">{alpha3Code}</div>
+                        <div className="cardText">{name}, {nativeName}</div>
+                    </div>
                 </div>
+                <div className="waiting">Please wait, getting more information.</div>
             </div >
         );
     }
@@ -93,14 +101,16 @@ export const ExpandedSingleCountry = ({ country: { name, alpha3Code, nativeName 
     return countryElement;
 }
 
-export const SingleCountryListItem = ({ country: { name, alpha3Code, nativeName }, listId }) => {
+export const SingleCountryListItem = ({ country: { name, alpha3Code, nativeName }, listId, clickHandler }) => {
     //console.log(name, listId);
 
     return (
         <div className="card" id={"country_" + listId}>
-            <div className="cardContainer">
-                <div className="countryCode">{alpha3Code}</div>
-                <div className="cardText">{name}, {nativeName}</div>
+            <div className="cardContainer" onClick={() => clickHandler({alpha3Code})}>
+                <div className="cardHeader">
+                    <div className="countryCode">{alpha3Code}</div>
+                    <div className="cardText">{name}, {nativeName}</div>
+                </div>
             </div>
         </div>
     );
@@ -108,7 +118,7 @@ export const SingleCountryListItem = ({ country: { name, alpha3Code, nativeName 
 
 
 
-export const CountryLister = ({ list }) => {
+export const CountryLister = ({ list, setValueCallback }) => {
     let isListEmpty = list.length < 1;
     let emptyListMessageEl = (<span>No countries found. Try searching with other words.</span>);
 
@@ -129,14 +139,21 @@ export const CountryLister = ({ list }) => {
                 country={value}
                 key={value['alpha3Code']}
                 listId={index}
+                clickHandler={country => setValueCallback(country)}
             />
         );
     }
 
-
     return (
         <>
-            <p><StatusCircle isRed={isListEmpty} /> Found {list.length} countries.</p>
+            { list.length === 1
+                ? <div
+                    className="clickToFullList"
+                    onClick={() => setValueCallback({ isEmpty: true })}
+                    >⬅ Back to list
+                  </div>
+                : <p><StatusCircle isRed={isListEmpty} /> Found {list.length} countries.</p>
+            }
             <div id="list-container">{countryListContainer(list)}</div>
         </>
     )

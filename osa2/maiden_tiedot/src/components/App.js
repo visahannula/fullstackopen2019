@@ -39,11 +39,15 @@ function App() {
   const inputValueHandler = (input) => {
     console.log("In inputvalue handler. ", input);
 
-    if (input.isEmpty) {
+    if (!input || (input.hasOwnProperty('isEmpty') && input.isEmpty)) {
       setCurrListValues(countryListValues.countries); // show everything if nothing set
-    } else {
+    } else if (input.hasOwnProperty('inputValue')) {
       setCurrListValues(
         filterFunc(countryListValues.countries, ["name", "nativeName", "alpha3Code"], input.inputValue)
+      );
+    } else if (input.hasOwnProperty('alpha3Code')) {
+      setCurrListValues(
+        filterFunc(countryListValues.countries, ["alpha3Code"], input['alpha3Code'])
       );
     }
   }
@@ -64,11 +68,11 @@ function App() {
       <div id="searchContainer">
         <p>Search for countries by writing below</p>
         <SearchInput
-          isInputEnabled={ isCountryListFetched } setValueCallback={inputValueHandler}
+          isInputEnabled={isCountryListFetched} setValueCallback={inputValueHandler}
         />
       </div>
       <div id="countryListContainer">
-        {<CountryLister list={currListValues} />}
+        {<CountryLister list={currListValues} setValueCallback={inputValueHandler} />}
       </div>
       <div id="footer">The data for this service is provided by <a href="https://restcountries.eu/" target="_blank" rel="noopener noreferrer">https://restcountries.eu/</a> Thank you!</div>
     </div>
