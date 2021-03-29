@@ -4,30 +4,46 @@ import './MapIframe.css';
 /**
  * OpenstreetMap map export in iframe element.
  */
-const baseURI = 'https://www.openstreetmap.org/export/embed.html?bbox=';
-const URIpart = '&layer=mapnik&marker=';
+const baseURI = 'https://www.openstreetmap.org/export/embed.html';
+const layerParam = 'layer=mapnik';
 
 /**
  * Creates bounding box for the map coordinates.
- * Output is a URL as a string.
- * @param {float} lat 
- * @param {*} lon 
- * @returns 
+ * Output is URL params as an array [ bounding box, marker].
+ * @param {number} latitude 
+ * @param {number} longitude 
+ * @returns URL params
  */
-function createMapURL(lat, lon) {
-    let Bbox = [
-        lon - 2.5,
-        lat - 2.5,
-        lon + 2.5,
-        lat + 2.5
+function createURLParamBBoxAndMarker(latitude, longitude) {
+    const multiplier = 2.5;
+    let boundingBox = [
+        longitude - multiplier,
+        latitude - multiplier,
+        longitude + multiplier,
+        latitude + multiplier
     ];
-
-    return baseURI + Bbox.join(',') + URIpart + [lat, lon].join(',');
-
+    // bounging box measurements and marker position
+    return [
+        'bbox=' + boundingBox.join(','),
+        'marker=' + [latitude, longitude].join(',')
+    ];
 }
 
-export const MapIframe = ({ latitude, longitude }) => 
+/**
+ * Create full URL for the map
+ * @param {string} baseURI 
+ * @param {array} params 
+ * @returns 
+ */
+function createMapURL(baseURI, params) {
+    return baseURI + '?' + params.join('&');
+}
+
+export const MapIframe = ({ latitude, longitude }) =>
     <iframe
-        src={createMapURL(latitude, longitude)} 
-        title={ "Map showing coordinates" + latitude + "," + longitude }
-        >Map cannot be shown.</iframe>;
+        src={createMapURL(
+            baseURI,
+            createURLParamBBoxAndMarker(latitude, longitude).concat(layerParam)
+        )}
+        title={"Map showing coordinates " + latitude + "," + longitude}
+    >Map cannot be shown.</iframe>;
