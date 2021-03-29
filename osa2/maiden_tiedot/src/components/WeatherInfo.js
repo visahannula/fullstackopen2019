@@ -10,7 +10,7 @@ class OpenWeatherMap {
         API_KEY: WEATHERMAP_APIKEY,
         weatherBaseURL: 'https://api.openweathermap.org/data/2.5',
         weatherPath: '/weather',
-        units: 'metric'
+        weatherUnits: 'metric'
     };
 
     axiosOptions = {
@@ -27,9 +27,9 @@ class OpenWeatherMap {
             params:
             {
                 q: city,
-                units: this.config.units,
+                units: this.config.weatherUnits,
                 appid: this.config.API_KEY
-            }
+            },
         },
         options || this.axiosOptions
     );
@@ -44,7 +44,7 @@ class OpenWeatherMap {
             console.log("Going to get weather: ", this.createGetCityReqConfig(city))
             const response = await axios
                 .request(this.createGetCityReqConfig(city))
-            console.info("Weather response 1.: ", response);
+            console.info("Weather response, full: ", response);
             callback(response.data);
         } catch (error) {
             console.error('Cannot get weather data for ' + city + ': ', error);
@@ -61,27 +61,25 @@ export const WeatherMapContainer = ({ city }) => {
         openWeather.getWeatherData(city, setWeather);
     }, [setWeather, city]);
 
-    console.info("Weather response 2.: ", weather);
+    console.info("Weather data available: ", weather);
 
     let elList = [];
 
     if (weather) {
         elList = Object.entries(weather['main']).map(
             ([key, value]) => {
-                console.log(`${key}: ${value}`);
-                return (<li key={key}><b>{key}</b>: {value}</li>);
+                return (<li key={key}><b>{key}:</b> {value}</li>);
             }
         );
 
-        elList.push(<li key="utc_offset"><b>UTC Offset</b>: {weather.timezone / 60 / 60} hours</li>)
+        elList.push(<li key="utc_offset"><b>UTC Offset:</b> {weather['timezone'] / 60 / 60} hours</li>);
+        elList.push(<li key="w_description"><b>Description:</b> {weather['weather'][0]['description']}</li>);
+        console.log("Weather element data: ", elList);
     }
-    /**/
 
-    // {resp || 'Cannot get weather data.'}
     return (
         <div className='weatherInfo'>
-            Here is info for weather:
-            <ul>{elList || "NO."}</ul>
+            <ul>{elList || "Weather info not available."}</ul>
         </div>
     );
 }
