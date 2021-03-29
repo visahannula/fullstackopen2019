@@ -3,7 +3,7 @@ import axios from 'axios';
 /**
  * Data fetching class for restcountries.eu
  * */
-class RestCountries {
+export class RestCountries {
     baseURL = 'https://restcountries.eu/rest/v2';
     paths = {
         name: '/name/',
@@ -12,7 +12,8 @@ class RestCountries {
     }
     axiosConfig = {
         responseType: 'json',
-        headers: { "Accept": "application/json" }
+        headers: { "Accept": "application/json" },
+        timeout: 2000
     }
     _filters = []; // for example ["name", "nativeName", "alpha3Code"]
 
@@ -45,12 +46,15 @@ class RestCountries {
         return URL;
     }
 
-    getEndpoint(URL, callback) {
-        console.log("Going to GET: " + URL);
-        return axios
-            .get(URL)
-            .then(response => this._successHandler({ response, callback }))
-            .catch(error => this._errorHandler({ error, callback, endpoint: URL }));
+    async getEndpoint(URL, callback) {
+        console.info("Going to GET: " + URL);
+        try {
+            const response = await axios
+                .get(URL, this.axiosConfig);
+            return this._successHandler({ response, callback });
+        } catch (error) {
+            return this._errorHandler({ error, callback, endpoint: URL });
+        }
     }
 
     _errorHandler({ error, endpoint, callback }) {
