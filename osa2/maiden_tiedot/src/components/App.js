@@ -3,7 +3,6 @@ import './App.css';
 
 import SearchInput from './SearchInput';
 import CountryLister from './CountryLister';
-import { SingleCountryContainer } from './SingleCountry';
 
 import RestCountries from '../RestCountries';
 
@@ -67,9 +66,6 @@ function App() {
         <SearchInput
           isInputEnabled={ isCountryListFetched } setValueCallback={inputValueHandler}
         />
-      </div>
-      <div id="singleCountryContainer">
-        <SingleCountryContainer country={isCountryListFetched ? "FIN" : false }></SingleCountryContainer>
       </div>
       <div id="countryListContainer">
         {<CountryLister list={currListValues} />}

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
+
 import "./CountryLister.css";
 import { MapIframe } from './MapIframe'
 
 import RestCountries from '../RestCountries';
-
+import { WeatherMapContainer } from './WeatherInfo';
 
 export const StatusCircle = ({ isRed }) => {
     const green = <span role="img" aria-label="green circle">🟢</span>;
@@ -15,25 +16,31 @@ export const StatusCircle = ({ isRed }) => {
 // TODO: Add container element which decides which to render (list or single element)
 
 export const ExpandedSingleCountry = ({ country: { name, alpha3Code, nativeName }, listId }) => {
-    console.log("THIS IS A SINGLE ITEM: ", name, alpha3Code, nativeName, listId);
-
     const [isFullData, setIsFullData] = useState(false);
     const [countryData, setCountryData] = useState(undefined);
 
-    useEffect(() => {
-        const restCountries = new RestCountries();
-        restCountries.alpha3code(alpha3Code, (response) => {
-            setIsFullData(true);
-            setCountryData(response);
-            console.log("Got a single Country data: ", response);
-        });
+    console.log("ExpandedSingleCoutry, data given: ", name, alpha3Code, nativeName, listId);
+
+    useEffect(() => {   
+        function getGetCountryData () {
+            const restCountries = new RestCountries();
+            restCountries.alpha3code(alpha3Code, (response) => {
+                console.log(response)
+                if (response) {
+                    setIsFullData(true);
+                    setCountryData(response);
+                    console.log("Got a single Country data: ", response);
+                }
+            });
+        }
+        getGetCountryData();
     },
         [alpha3Code]
     );
 
     console.log("IsFullData: ", isFullData);
     console.log("CountryData: ", countryData);
-    
+
     let countryElement;
 
     if (isFullData && countryData) {
@@ -48,14 +55,14 @@ export const ExpandedSingleCountry = ({ country: { name, alpha3Code, nativeName 
                 <div className="countryInformation">
                     <h2>Country information</h2>
                     <ul>
-                        <li>World region: { region }</li>
-                        <li>Capital: { capital }</li>
+                        <li>World region: {region}</li>
+                        <li>Capital: {capital}</li>
                         <li>Population: {new Intl.NumberFormat().format(population)}</li>
-                        <li>Top level domain: { topLevelDomain }</li>
+                        <li>Top level domain: {topLevelDomain}</li>
                     </ul>
 
-                    <p><b>Spoken languages:</b> { languages.map(lang => lang['name']).join(", ") }</p>
-                    <div class="flagAndMap">
+                    <p><b>Spoken languages:</b> {languages.map(lang => lang['name']).join(", ")}</p>
+                    <div className="flagAndMap">
                         <img className="flag" src={countryData['flag']} alt="flag" />
                         <MapIframe
                             latitude={countryData['latlng'][0]}
@@ -63,6 +70,11 @@ export const ExpandedSingleCountry = ({ country: { name, alpha3Code, nativeName 
                             className="mapIframe">
                         </MapIframe>
                     </div>
+                    <div>
+                        Current weather in {capital}:
+                        <WeatherMapContainer city={capital}></WeatherMapContainer>
+                    </div>
+
                 </div>
             </div>
         );
@@ -100,8 +112,7 @@ export const CountryLister = ({ list }) => {
     let isListEmpty = list.length < 1;
     let emptyListMessageEl = (<span>No countries found. Try searching with other words.</span>);
 
-    console.log("List", list);
-    console.log("Is list array: ", Array.isArray(list));
+    console.info("List", list);
 
     let countryListContainer = () => emptyListMessageEl;
 
