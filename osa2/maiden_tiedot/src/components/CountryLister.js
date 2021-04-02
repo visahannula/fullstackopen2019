@@ -43,7 +43,7 @@ export const ExpandedSingleCountry = ({ country: { name, alpha3Code, nativeName 
 
     let countryElement;
 
-    if (isFullData && countryData) {
+    if (isFullData && countryData) { // THIS IS COUNTRY WE HAVE ALL THE INFO AVAILABLE
         const { region, capital, population, topLevelDomain, languages } = countryData;
 
         countryElement = (
@@ -83,7 +83,7 @@ export const ExpandedSingleCountry = ({ country: { name, alpha3Code, nativeName 
                 </div>
             </div>
         );
-    } else {
+    } else { // NO SPECIFIC INFO AVAILABLE FOR THIS COUNTRY (YET)
         countryElement = (
             <div className="card" id={"country_" + listId
             }>
@@ -106,7 +106,7 @@ export const SingleCountryListItem = ({ country: { name, alpha3Code, nativeName 
 
     return (
         <div className="card" id={"country_" + listId}>
-            <div className="cardContainer" onClick={() => clickHandler({alpha3Code})}>
+            <div className="cardContainer" onClick={() => clickHandler({alpha3Code})}> {/* Fetch unique alpha3Code */ }
                 <div className="cardHeader">
                     <div className="countryCode">{alpha3Code}</div>
                     <div className="cardText">{name}, {nativeName}</div>

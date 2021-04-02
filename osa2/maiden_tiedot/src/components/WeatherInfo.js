@@ -34,7 +34,7 @@ class OpenWeatherMap {
         options || this.axiosOptions
     );
 
-    getWeatherData = async (city, callback) => {
+    getWeatherData = async (city, callback = () => console.log("Provide Callback!")) => {
         if (!city) {
             console.error("No city provided for the weather response.");
             return false;
@@ -65,6 +65,7 @@ export const WeatherMapContainer = ({ city }) => {
 
     let elList = [];
 
+
     if (weather) {
         elList = Object.entries(weather['main']).map(
             ([key, value]) => {
@@ -73,8 +74,11 @@ export const WeatherMapContainer = ({ city }) => {
         );
 
         elList.push(<li key="utc_offset"><b>UTC Offset:</b> {weather['timezone'] / 60 / 60} hours</li>);
-        elList.push(<li key="w_description"><b>Description:</b> {weather['weather'][0]['description']}</li>);
+        elList.push(<p><b>Description:</b> {weather['weather'][0]['description']}</p>);
         console.log("Weather element data: ", elList);
+
+        const weatherIconURL = 'http://openweathermap.org/img/wn/' + weather['weather'][0]['icon'] + '.png';
+        elList.push(<img src={weatherIconURL} alt="Icon for weather"></img>)
     }
 
     return (
