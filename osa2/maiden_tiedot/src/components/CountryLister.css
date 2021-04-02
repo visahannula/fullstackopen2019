@@ -78,3 +78,12 @@
     margin: 5px;
 }
 
+.waiting {
+    margin: 10px;
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: lightpink;
+    font-size: 2rem;
+}
+
