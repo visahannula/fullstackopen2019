@@ -1,88 +1,111 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-
+import { getAll, postNote, putNote } from '../services/notes';
 import Note from './Note';
 
-const HOSTNAME = process.env.REACT_APP_API_HOSTNAME || 'localhost';
-const PORT = process.env.REACT_APP_API_PORT || 3001;
+const postNewNoteToServer = (note, callback) => {
+    console.info("Posting to server: ", note);
+    postNote(note)
+        .then(
+            response => {
+                console.log("Got response from server: ", response);
+                callback(response);
+            }
+        ).catch(error => {
+            console.error("Error when posting data. ", error);
+            return false;
+        });
+}
 
 const App = props => {
-    const defaultNoteInputValue = "Default note";
+    const defaultNoteInputValue = "Write a note";
     const [showAll, setShowAll] = useState(true);
     const [notes, setNotes] = useState([]);
-    const [newNote, setNewNote] = useState(defaultNoteInputValue);
-    const [inputStarted, setInputStarted] = useState(false);
+    const [newNoteDefInput, setNewNoteDefInput] = useState("");
 
     const getFromServerHook = () => {
         console.log("Effect start");
-        axios
-            .get(`http://${HOSTNAME}:${PORT}/notes`)
-            .then(
-                response => 
-                    setNotes(response.data)
-                , response => 
-                    console.log('Request failed.', response)
-            );
+        getAll()
+            .then(notes =>
+                setNotes(notes)
+            ).catch(error => {
+                console.error("Error when getting data. ", error);
+            });
     };
 
     useEffect(getFromServerHook, []);
 
-    console.log('render', notes.length, 'notes');
+    console.log('Rendering ', notes.length, ' notes.');
+
+    const addNewNote = (note) => {
+        setNotes([...notes, note]);
+        setNewNoteDefInput(defaultNoteInputValue);
+    }
 
     const handlerNoteOnSubmit = event => {
         event.preventDefault();
 
+        if (newNoteDefInput === "") {
+            console.warn("Empty note content, not setting.");
+            return;
+        }
+
         const note = {
-            id: notes.length + 1,
-            content: newNote,
+            content: newNoteDefInput,
             date: new Date().toISOString(),
             important: Math.random() > 0.5,
         };
 
-        console.log(`New note submitted: ${event.target[0].value}. Setting: `, note);
-
-        if (newNote === "") {
-            console.log("Empty note content, not setting.");
-            return
-        }
-
-        setNotes([...notes, note]);
-        setInputStarted(false);
-        setNewNote(defaultNoteInputValue);
+        console.log(`New note submitted: ${event.target[0].value}. Will POST to server: `, note);
+        postNewNoteToServer(note, addNewNote);
     }
 
     const handlerNewNote = event => {
         console.log("Input received: ", event.target.value);
-        setNewNote(event.target.value);
+        setNewNoteDefInput(event.target.value);
     }
 
-    const handlerNoteInputOnFocus = event => {
-        if (!inputStarted) {
-            setNewNote("");
-            setInputStarted(true);
-        }
-    }
+    const handleNoteImportanceToggle = (id) => {
+        let noteToChange = notes.find(note => note.id === id);
 
-    const handlerNoteInputOnBlur = event => {
-        if (newNote === "" || newNote === defaultNoteInputValue) {
-            setNewNote(defaultNoteInputValue);
-            setInputStarted(false);
+        if (!id || !noteToChange) {
+            console.error("Cannot find note to change with ID: ", id);
+            return;
         }
+
+        noteToChange = { ...noteToChange, important: !noteToChange.important };
+
+        console.info(`Will change note ${id} with: `, noteToChange);
+
+        putNote(noteToChange)
+            .then(response => {
+                console.log("Changed importance", response);
+                setNotes(notes.map(note => note.id === response.id ? response : note));
+            })
+            .catch(error => {
+                console.log("Failed to change importance. ", error);
+            })
     }
 
     const notesToShow = notes.filter(note => showAll || note.important);
 
-    const noteHTML = () => notesToShow.map(note =>
-        <Note
-            key={note.id}
-            note={note.content}
-        />);
+    const noteHTML = () => notesToShow.map(note => {
+        //console.log("Now creating note: ", note);
+        return (
+            <Note
+                key={note.id}
+                content={note.content}
+                important={note.important}
+                toggleImportant={() => handleNoteImportanceToggle(note.id)}
+            />)
+    });
 
     return (
         <div>
             <h1>Notes</h1>
             <div>
-                <button onClick={() => setShowAll(!showAll)}>
+                <button
+                    onClick={() => setShowAll(!showAll)}
+                >
                     Show {showAll ? "important" : "all"}
                 </button>
             </div>
@@ -91,11 +114,10 @@ const App = props => {
             </ul>
             <form onSubmit={handlerNoteOnSubmit} name="newNoteForm">
                 <input
-                    onFocus={handlerNoteInputOnFocus}
-                    onBlur={handlerNoteInputOnBlur}
                     onChange={handlerNewNote}
                     name="noteSubmitTextField"
-                    value={newNote}
+                    value={newNoteDefInput}
+                    placeholder={defaultNoteInputValue}
                 />
                 <button type="submit">Save</button>
             </form>
