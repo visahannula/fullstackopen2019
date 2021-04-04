@@ -2,6 +2,10 @@
 
 Osa2 "Puhelinluettelo"
 
+1. Start server
+2. Start frontend
+
+
 There are two "script" commands available:
 - "server": ". ${PWD}/.env.local; json-server --w db.json --ng -H ${REACT_APP_API_HOSTNAME:=localhost} -p ${REACT_APP_API_PORT:=3001}"
 -- Start JSON server on .env.local configured host and port
