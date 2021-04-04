@@ -56,6 +56,13 @@ class OpenWeatherMap {
 export const WeatherMapContainer = ({ city }) => {
     const [weather, setWeather] = useState(undefined);
 
+    console.info("City for weather info: ", city);
+
+
+    if (!city) {
+        console.log("No city provided!");
+    }
+
     useEffect(() => {
         const openWeather = new OpenWeatherMap()
         openWeather.getWeatherData(city, setWeather);
@@ -65,21 +72,31 @@ export const WeatherMapContainer = ({ city }) => {
 
     let elList = [];
 
-
     if (weather) {
-        elList = Object.entries(weather['main']).map(
-            ([key, value]) => {
-                return (<li key={key}><b>{key}:</b> {value}</li>);
-            }
+        const { temp, feels_like, pressure, humidity } = weather.main;
+        const weatherIconURL = 'https://openweathermap.org/img/wn/' + weather['weather'][0]['icon'] + '.png';
+
+        elList.push(
+            <p>{weather['weather'][0]['description']}
+                <img src={weatherIconURL} alt="Icon for weather"></img>
+            </p>
         );
 
-        elList.push(<li key="utc_offset"><b>UTC Offset:</b> {weather['timezone'] / 60 / 60} hours</li>);
-        elList.push(<p><b>Description:</b> {weather['weather'][0]['description']}</p>);
-        console.log("Weather element data: ", elList);
+        elList.push(
+            <>
+                <li><b>Temperature:</b> {temp}&deg;C</li>
+                <li><b>Feels like:</b> {feels_like}&deg;C</li>
+                <li><b>Pressure:</b> {pressure}hPa</li>
+                <li><b>Humidity:</b> {humidity}%</li>
+            </>
+        )
 
-        const weatherIconURL = 'http://openweathermap.org/img/wn/' + weather['weather'][0]['icon'] + '.png';
-        elList.push(<img src={weatherIconURL} alt="Icon for weather"></img>)
+        elList.push(<li key="utc_offset"><b>UTC Offset:</b> {weather['timezone'] / 60 / 60} hours</li>);
+
+        console.log("Weather element data: ", elList);
     }
+
+    console.log("ellist: ", elList);
 
     return (
         <div className='weatherInfo'>
