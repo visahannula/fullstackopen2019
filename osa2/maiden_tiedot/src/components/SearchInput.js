@@ -13,7 +13,13 @@ export const SearchInput = ({ setValueCallback, isInputEnabled }) => {
             console.log("Input value changed. ", value);
             setVisibleInputValue(value);
             clearTimeout(timeoutID); // debouncing
-            settimeoutID(setTimeout(updateInputState, 500, value));
+            settimeoutID(
+                setTimeout(
+                    updateInputState,
+                    500,
+                    value
+                )
+            );
         }
     }
 
