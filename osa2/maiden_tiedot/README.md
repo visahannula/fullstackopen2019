@@ -1,11 +1,12 @@
 # Maiden tiedot, FullStack 2019 course part2 exercise
 
-* First gets all countries from webservices
-* List all countries
-  * For each country english name and local name are shown
-  * For each country an option to show only that country is available
+* First gets all countries
 
-* Search and list of countries
+* Lists all countries
+  * For each country english name and local name are shown
+  * Clicking item will expand that single country
+
+* Ability to search countries
   * Input field filters list of countries shown
   * If only one country on filtered results -> shows detail of the country
 
@@ -15,6 +16,23 @@
   * Languages
   * Flag (image)
   * Current Weather for capital city
+
+# OpenWeatherMap API key
+You have to provide the `REACT_APP_WEATHER_APPID` environment variable which contains your OpenWeatherMap service ___appid___.
+
+# Screenshots
+
+Single country:
+![Screenshot country FIN ](Screenshot_country_FIN.png)
+
+Single country, search by native name:
+![Screenshot country ETH native](Screenshot_country_ETH_nativename.png)
+
+Opening a country inside listing:
+![Screenshot Open inside list](Screenshot_list_open_single.png)
+
+Responsive:
+![Screenshot mobile responsive](Screenshot_mobile.png)
 
 ---
 
