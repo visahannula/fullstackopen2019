@@ -41,14 +41,22 @@ function App() {
 
     if (!input || (input.hasOwnProperty('isEmpty') && input.isEmpty)) {
       setCurrListValues(countryListValues.countries); // show everything if nothing set
-    } else if (input.hasOwnProperty('inputValue')) {
+      return;
+    }
+
+    if (input.hasOwnProperty('inputValue')) {
       setCurrListValues(
         filterFunc(countryListValues.countries, ["name", "nativeName", "alpha3Code"], input.inputValue)
       );
-    } else if (input.hasOwnProperty('alpha3Code')) {
+      return;
+
+    }
+    
+    if (input.hasOwnProperty('alpha3Code')) {
       setCurrListValues(
         filterFunc(countryListValues.countries, ["alpha3Code"], input['alpha3Code'])
       );
+      return;
     }
   }
 
@@ -72,7 +80,7 @@ function App() {
         />
       </div>
       <div id="countryListContainer">
-        {<CountryLister list={currListValues} setValueCallback={inputValueHandler} />}
+        <CountryLister list={currListValues} setValueCallback={inputValueHandler} />
       </div>
       <div id="footer">The data for this service is provided by <a href="https://restcountries.eu/" target="_blank" rel="noopener noreferrer">https://restcountries.eu/</a> Thank you!</div>
     </div>
