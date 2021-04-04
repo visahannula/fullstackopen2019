@@ -13,7 +13,7 @@ export class RestCountries {
     axiosConfig = {
         responseType: 'json',
         headers: { "Accept": "application/json" },
-        timeout: 2000
+        timeout: 5000
     }
     _filters = []; // for example ["name", "nativeName", "alpha3Code"]
 
